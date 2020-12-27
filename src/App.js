@@ -1,20 +1,35 @@
-import React from 'react'
+// import React from 'react'
 import Button from './Button'
 import { Component } from 'react';
 
-class App extends React.Component {
-  buttonClicked(){
-    alert('You clicked on the button!')
-  }
-  render(){
+// class App extends React.Component {
+//   buttonClicked(){
+//     alert('You clicked on the button!')
+//   }
+//   render(){
+//   return (
+//     <div>
+//       <h1>{this.props.appName}</h1>
+//       <Button title='Click me!' click={this.buttonClicked}/>
+//     </div>
+    
+//   );
+//   }
+// }
+function buttonClicked(){
+  alert('You clicked on the button!')
+}
+
+function App(props) {
+  
   return (
     <div>
-      <h1>{this.props.appName}</h1>
-      <Button title='Click me!' click={this.buttonClicked}/>
+      <h1>{props.appName}</h1>
+      <Button title='Click me!' onClick={buttonClicked}/>
     </div>
     
   );
   }
-}
+
 
 export default App;
