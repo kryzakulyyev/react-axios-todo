@@ -1,15 +1,13 @@
 function TodoItems (props) {
-return ( 
-   <ul>
-     {props.tasks.map(item=>{
+  function handleRemove(e){
+   props.removeItem(e.target.id)
+  }
+return props.tasks.map(item =>{
      return (
-       <li>{item.title} &nbsp; 
-       <span className='remove-item'>(Remove)</span>
+       <li key={item.id}> {item.title} &nbsp; 
+       <span  id={item.id} className='remove-item' onClick={handleRemove}>(Remove)</span>
        </li>
        )
     })
    }
-  </ul>
- )
-}
 export default TodoItems

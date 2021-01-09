@@ -5,22 +5,12 @@ class TodoList extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      tasks: [
-        {
-          title: 'Get a shopping cart',
-          completed : false,
-          id: 123456789
-        },
-        {
-         title: 'Buy Milk',
-         completed: false,
-         id: 234567890
-        }
-      ],
+      tasks: [],
       newTask:''
     }
     this.handleInput = this.handleInput.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.removeItem = this.removeItem.bind(this) 
   }
   handleInput(e){
     this.setState({
@@ -30,12 +20,20 @@ class TodoList extends React.Component{
 
   handleClick(e){
    if(this.state.newTask.trim()){
-     //Create a new task object
-     let newItem =  {
-      title: this.state.newTask,
-      completed : false,
-      id: Date.now()
-    }
+    fetch('http://localhost:8080/api/todoitems/' ,{
+      method: 'POST',
+      body: JSON.stringify({
+        title: this.state.newTask
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    }).then((response)=>response.json()).then((json)=>{
+      const newTasks = [...this.state.tasks, json]
+      this.setState({
+        tasks: newTasks
+      })
+    });
     //Concatenate new task object to the previous tasks in the state
     // this.setState(prevState=>{
     //   return {
@@ -43,26 +41,69 @@ class TodoList extends React.Component{
     //   }
     // })
     //Another concatenating method you might find easier
-    const newTask = [...this.state.tasks, newItem]
-    this.setState({
-      tasks: newTask
-    })
+    // const newTask = [...this.state.tasks, newItem]
+    // this.setState({
+    //   tasks: newTask
+    // })
     //Empty the newTask property in the state
-    this.state.newTask=''
+    this.state.newTask='';
    }else{
      alert('Please enter a value')
    }
   }
+   removeItem(id ){
+    fetch('http://localhost:8080/api/todoitems/'+id, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    }).then((response) => response.json())
+    .then((json) => {
+      const filteredTasks = this.state.tasks.filter((task) =>task.id !==json.id && task.id !== id )
+      this.setState({
+        tasks: filteredTasks
+      })
+     
+      
+    });
 
+    // const filteredTasks = this.state.tasks.filter(task => {
+    //   return task.id !== id;
+    // })
+    // this.setState({
+    //   tasks: filteredTasks
+    // })
+  }
+  
+  componentDidMount(){
+    fetch('http://localhost:8080/api/todoitems/')
+    .then((response) => response.json())
+    .then((json) => this.setState({
+      tasks: json
+    }));
+
+   }
+
+  // componentDidUpdate(){
+  
+  // }
+  // componentWillUnmount(){
+
+  // }
   render(){
-    console.log(this.state.newTask)
-    return (
+
+   
+  
+    return( 
     <div>
      <form>
        <input type='text' onInput={this.handleInput} value={this.state.newTask}/>
        <button type='button' onClick={this.handleClick}>Add</button>
      </form>
-     <TodoItems tasks={this.state.tasks} foo='bar'/>
+     <ul>
+        <TodoItems tasks={this.state.tasks} foo='bar' removeItem={this.removeItem}/>
+     </ul>
+     
     </div>
     )
   }
