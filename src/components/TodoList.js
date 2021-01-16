@@ -21,18 +21,16 @@ class TodoList extends React.Component{
 
   handleClick(e){
    if(this.state.newTask.trim()){
-    fetch('http://localhost:8080/api/todoitems/' ,{
-      method: 'POST',
-      body: JSON.stringify({
-        title: this.state.newTask
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    }).then((response)=>response.json()).then((json)=>{
-      const newTasks = [...this.state.tasks, json]
+
+    const todoItem = {
+      title: this.state.newTask
+    }
+
+   TodoService.create(todoItem).then((res)=>{
+      const newTasks = [...this.state.tasks, res.data]
       this.setState({
-        tasks: newTasks
+        tasks: newTasks,
+        newTask:''
       })
     });
     //Concatenate new task object to the previous tasks in the state
@@ -47,20 +45,17 @@ class TodoList extends React.Component{
     //   tasks: newTask
     // })
     //Empty the newTask property in the state
-    this.state.newTask='';
+    ;
    }else{
      alert('Please enter a value')
    }
   }
    removeItem(id ){
-    fetch('http://localhost:8080/api/todoitems/'+id, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    }).then((response) => response.json())
-    .then((json) => {
-      const filteredTasks = this.state.tasks.filter((task) =>task.id !==json.id && task.id !== id )
+    const todoItem = {
+      title: this.state.newTask
+    }
+    TodoService.remove(todoItem).then((json) => {
+      const filteredTasks = this.state.tasks.filter((task) =>task.id !==json.data.id && task.id !== id )
       this.setState({
         tasks: filteredTasks
       })
