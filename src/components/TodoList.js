@@ -51,11 +51,10 @@ class TodoList extends React.Component{
    }
   }
    removeItem(id ){
-    const todoItem = {
-      title: this.state.newTask
-    }
-    TodoService.remove(todoItem).then((json) => {
-      const filteredTasks = this.state.tasks.filter((task) =>task.id !==json.data.id && task.id !== id )
+    
+
+    TodoService.remove(id).then((res) => {
+      const filteredTasks = this.state.tasks.filter((task) =>task.id !==res.data.id && task.id !== id )
       this.setState({
         tasks: filteredTasks
       })

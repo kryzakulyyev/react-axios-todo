@@ -7,8 +7,8 @@ class TodoService {
     return http.post('/todoitems', data)
    }
 
-   remove(data){
-     return http.delete('/todoitems', data)
+   remove(id){
+     return http.delete('/todoitems/'+id)
    }
   
 }
