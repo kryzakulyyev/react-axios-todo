@@ -10,7 +10,10 @@ class TodoService {
    remove(id){
      return http.delete('/todoitems/'+id)
    }
-  
+   
+   update(id, data){
+   return http.put('/todoitems/'+id, data)
+   }
 }
 
 export default new TodoService();

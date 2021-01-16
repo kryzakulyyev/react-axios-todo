@@ -11,7 +11,8 @@ class TodoList extends React.Component{
     }
     this.handleInput = this.handleInput.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.removeItem = this.removeItem.bind(this) 
+    this.removeItem = this.removeItem.bind(this);
+    this.editItems = this.editItems.bind(this);
   }
   handleInput(e){
     this.setState({
@@ -51,8 +52,6 @@ class TodoList extends React.Component{
    }
   }
    removeItem(id ){
-    
-
     TodoService.remove(id).then((res) => {
       const filteredTasks = this.state.tasks.filter((task) =>task.id !==res.data.id && task.id !== id )
       this.setState({
@@ -61,6 +60,23 @@ class TodoList extends React.Component{
      
       
     });
+  }
+      
+  editItems (id, value) {
+          const todoItem = {
+            title: value
+          }
+      TodoService.update(id, todoItem).then(() => {
+        const tasks = this.state.tasks
+        tasks.map(task => {
+          if( task.id === id){
+            task.title = value
+          }
+        })
+        this.setState({tasks: tasks})
+      })
+    }
+
 
     // const filteredTasks = this.state.tasks.filter(task => {
     //   return task.id !== id;
@@ -68,7 +84,7 @@ class TodoList extends React.Component{
     // this.setState({
     //   tasks: filteredTasks
     // })
-  }
+  
   
   componentDidMount(){
     TodoService.getAll().then((res) => this.setState({
@@ -94,7 +110,7 @@ class TodoList extends React.Component{
        <button type='button' onClick={this.handleClick}>Add</button>
      </form>
      <ul>
-        <TodoItems tasks={this.state.tasks} foo='bar' removeItem={this.removeItem}/>
+        <TodoItems tasks={this.state.tasks} foo='bar'  editItems={this. editItems} removeItem={this.removeItem}/>
      </ul>
      
     </div>

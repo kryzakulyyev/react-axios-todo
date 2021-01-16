@@ -14,3 +14,6 @@ code {
 .remove-item {
   color: red;
 }
+.edit-item {
+  border: none;
+}
