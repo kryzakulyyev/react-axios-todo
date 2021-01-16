@@ -1,5 +1,6 @@
 import React from 'react'
 import TodoItems from './TodoItems'
+import TodoService from '../services/todo.service'
 
 class TodoList extends React.Component{
   constructor(props){
@@ -76,11 +77,9 @@ class TodoList extends React.Component{
   }
   
   componentDidMount(){
-    fetch('http://localhost:8080/api/todoitems/')
-    .then((response) => response.json())
-    .then((json) => this.setState({
-      tasks: json
-    }));
+    TodoService.getAll().then((res) => this.setState({
+      tasks: res.data
+    }))
 
    }
 
